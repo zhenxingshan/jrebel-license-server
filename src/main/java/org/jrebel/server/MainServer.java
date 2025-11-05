@@ -141,10 +141,10 @@ public class MainServer extends AbstractHandler {
         String username = request.getParameter("username");
         String guid = request.getParameter("guid");
         String reqOffline = request.getParameter("offline");
-        //String offlineDays = request.getParameter("offlineDays");
-        //System.out.println(((Request) request).getParameters());
-        //boolean offline = Boolean.parseBoolean(reqOffline);
-        boolean offline = true;
+        boolean offline = Boolean.parseBoolean(reqOffline);
+        if(StringUtils.isNotEmpty(request.getParameter("oldGuid"))){
+            offline = true;
+        }
         String validFrom = "";
         String validUntil = "";
         
