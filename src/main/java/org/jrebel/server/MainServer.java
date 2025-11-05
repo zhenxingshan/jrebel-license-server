@@ -46,10 +46,10 @@ public class MainServer extends AbstractHandler {
 
     public static void main(String[] args) throws Exception {
         Map<String, String> arguments = parseArguments(args);
-        String port = arguments.getOrDefault("p", "9009");
+        String port = arguments.getOrDefault("p", "9020");
 
         if (!port.matches("\\d+")) {
-            port = "9009";
+            port = "9020";
         }
 
         Server server = new Server(Integer.parseInt(port));
@@ -232,7 +232,12 @@ public class MainServer extends AbstractHandler {
         response.setContentType("text/html; charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
 
-        String licenseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String protocol = request.getHeader("X-Forwarded-Proto");
+        String licenseUrl = protocol + "://" + request.getServerName();;
+        if (StringUtils.equals("https", protocol)) {
+        } else {
+            licenseUrl = licenseUrl + ":" + request.getServerPort();
+        }
 
         StringBuilder html = new StringBuilder("<h3>使用说明（Instructions for use）</h3>");
         html.append("<hr/>");
