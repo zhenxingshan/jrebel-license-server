@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.jrebel.util.IPUtils;
 import org.jrebel.util.JrebelSign;
 import org.jrebel.util.rsasign;
 
@@ -83,7 +84,20 @@ public class MainServer extends AbstractHandler {
             obtainTicketHandler(baseRequest, request, response);
         } else if ("/rpc/releaseTicket.action".equals(target)) {
             releaseTicketHandler(baseRequest, request, response);
+        } else if ("/ip".equals(target)) {
+            resolveIp(baseRequest, request, response);
         }
+    }
+
+    private void resolveIp(Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        baseRequest.setHandled(true);
+        sendTextResponse(response, IPUtils.getIpAddr(request));
+    }
+
+    private void sendTextResponse(HttpServletResponse response, String text) throws IOException {
+        response.setContentType("text/plain; charset=utf-8");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().print(text);
     }
 
     private void sendJsonResponse(HttpServletResponse response, JSONObject json) throws IOException {
